@@ -137,7 +137,6 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Border\border.frag" />
     <None Include="Shaders\Core\core.frag" />
     <None Include="Shaders\Core\core.vert" />
   </ItemGroup>

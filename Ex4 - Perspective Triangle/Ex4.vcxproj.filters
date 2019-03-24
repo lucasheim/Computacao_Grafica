@@ -27,9 +27,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Border\border.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\Core\core.frag">
       <Filter>Shaders</Filter>
     </None>

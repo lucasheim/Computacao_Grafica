@@ -63,7 +63,6 @@ int System::OpenGLSetup()
 int System::SystemSetup()
 {
 	coreShader = Shader("Shaders/Core/core.vert", "Shaders/Core/core.frag");
-	borderShader = Shader("Shaders/Core/core.vert", "Shaders/Border/border.frag");
 	coreShader.Use();
 
 	return EXIT_SUCCESS;
@@ -76,9 +75,18 @@ void System::Run()
 	GLfloat vertices[] =
 	{
 		// Positions         // Colors
-		 0.0f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f, // Top			 (RED)
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, // Bottom middle (GREEN)
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f, // Bottom left	 (BLUE)
+		 0.0f,  0.5f, -0.5f,	  1.0f, 0.0f, 0.0f, // Top			 (RED)
+		 0.5f, -0.5f,  0.0f,	  0.0f, 1.0f, 0.0f, // Bottom middle (GREEN)
+		-0.5f, -0.5f,  0.0f,	  0.0f, 0.0f, 1.0f, // Bottom left	 (BLUE)
+
+		  0.0f,   0.5f, -0.5f,    1.0f, 0.0f, 0.0f, // Top			 (RED)
+		  0.0f,  -0.5f, -1.0f,    0.0f, 0.0f, 1.0f, // Back			 (BLUE)
+		  0.5f,  -0.5f,  0.0f,    0.0f, 1.0f, 0.0f, // Bottom middle (GREEN)
+
+		  0.0f,   0.5f, -0.5f,    1.0f, 0.0f, 0.0f, // Top			 (RED)
+		 -0.5f,  -0.5f,  0.0f,    0.0f, 0.0f, 1.0f, // Bottom left	 (BLUE)
+		  0.0f,  -0.5f, -1.0f,    0.0f, 1.0f, 0.0f, // Back			 (BLUE)
+
 	};
 
 	GLuint VBO, VAO;
@@ -101,17 +109,45 @@ void System::Run()
 
 	glBindVertexArray(0); // Unbind VAO
 
+
+	float rotation = 0.0f;
+	float closiness = -3.0f;
 	while (!glfwWindowShouldClose(window)) {
+		glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(rotation/50.0f, 0.0f, closiness));
+		glm::mat4 perspective = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+
+		int modelLoc, viewLoc, projLoc;
+		modelLoc = glGetUniformLocation(coreShader.program, "model");
+		viewLoc = glGetUniformLocation(coreShader.program, "view");
+		projLoc = glGetUniformLocation(coreShader.program, "proj");
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+		
 		this->ShowFPS(window);
 		glfwPollEvents();
-
-#pragma region Input Handling
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
 
-#pragma endregion
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			rotation += 0.05f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			rotation -= 0.05f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			closiness += 0.01f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			closiness -= 0.01f;
+		}
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -119,7 +155,7 @@ void System::Run()
 		coreShader.Use();
 
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 9);
 		glBindVertexArray(0);
 
 
