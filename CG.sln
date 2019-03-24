@@ -7,7 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex1 - Two Triangles", "Ex1 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex3 - Moving Triangle", "Ex3 - Moving Triangle\Ex2 - Border Triangle.vcxproj", "{008681DC-6B9C-414E-81F7-100E4B9113D8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "aa", "Ex2 - Border Triangle\aa.vcxproj", "{58B5E2CD-E593-4382-951B-9165CBF317D2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex2 - Border Triangle", "Ex2 - Border Triangle\aa.vcxproj", "{58B5E2CD-E593-4382-951B-9165CBF317D2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex4 - Perspective Triangle", "Ex4 - Perspective Triangle\Ex4.vcxproj", "{973C94DE-F84E-41F0-8F51-8E02A37A052D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{58B5E2CD-E593-4382-951B-9165CBF317D2}.Release|x64.Build.0 = Release|x64
 		{58B5E2CD-E593-4382-951B-9165CBF317D2}.Release|x86.ActiveCfg = Release|Win32
 		{58B5E2CD-E593-4382-951B-9165CBF317D2}.Release|x86.Build.0 = Release|Win32
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Debug|x64.ActiveCfg = Debug|x64
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Debug|x64.Build.0 = Debug|x64
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Debug|x86.ActiveCfg = Debug|Win32
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Debug|x86.Build.0 = Debug|Win32
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x64.ActiveCfg = Release|x64
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x64.Build.0 = Release|x64
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x86.ActiveCfg = Release|Win32
+		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
