@@ -56,9 +56,19 @@ int System::OpenGLSetup()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return EXIT_SUCCESS;
 }
+
+float lastX = 400;
+float lastY = 300;
+float yaw = 0;
+float pitch = 0;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+bool firstMouse = true;;
 
 int System::SystemSetup()
 {
@@ -110,11 +120,19 @@ void System::Run()
 	glBindVertexArray(0); // Unbind VAO
 
 
-	float rotation = 0.0f;
-	float closiness = -3.0f;
+	float cameraSpeed;
+
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
+
+
 	while (!glfwWindowShouldClose(window)) {
-		glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(rotation/50.0f, 0.0f, closiness));
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		cameraSpeed = 2.5f * deltaTime;
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		glm::mat4 perspective = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 
 		int modelLoc, viewLoc, projLoc;
@@ -134,19 +152,19 @@ void System::Run()
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			rotation += 0.05f;
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			rotation -= 0.05f;
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			closiness += 0.01f;
+			cameraPos += cameraSpeed * cameraFront;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			closiness -= 0.01f;
+			cameraPos -= cameraSpeed * cameraFront;
 		}
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
