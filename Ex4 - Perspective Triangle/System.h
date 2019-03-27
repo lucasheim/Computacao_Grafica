@@ -40,6 +40,7 @@ public:
 	System();
 	~System();
 
+	static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 	int GLFWInit();
 	int OpenGLSetup();
 	int SystemSetup();

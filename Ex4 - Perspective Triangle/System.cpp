@@ -1,5 +1,13 @@
 #include "System.h"
 
+float lastX = 400;
+float lastY = 300;
+float yaw = -90.0f;
+float pitch = 0;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+bool firstMouse = true;
 
 
 System::System()
@@ -9,6 +17,38 @@ System::System()
 
 System::~System()
 {
+}
+
+void System::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xOffset = xpos - lastX;
+	float yOffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.05f;
+	xOffset *= sensitivity;
+	yOffset *= sensitivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	front.y = sin(glm::radians(pitch));
+	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	cameraFront = glm::normalize(front);
 }
 
 int System::GLFWInit()
@@ -41,6 +81,8 @@ int System::GLFWInit()
 		return EXIT_FAILURE;
 	}
 
+	glfwSetCursorPosCallback(window, this->mouseCallback);
+
 	glViewport(0, 0, screenWidth, screenHeight);
 
 	return EXIT_SUCCESS;
@@ -61,14 +103,6 @@ int System::OpenGLSetup()
 	return EXIT_SUCCESS;
 }
 
-float lastX = 400;
-float lastY = 300;
-float yaw = 0;
-float pitch = 0;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-bool firstMouse = true;;
 
 int System::SystemSetup()
 {
