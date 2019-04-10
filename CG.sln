@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex2 - Border Triangle", "Ex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex4 - Perspective Triangle", "Ex4 - Perspective Triangle\Ex4.vcxproj", "{973C94DE-F84E-41F0-8F51-8E02A37A052D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ex5 - Model Loading", "Ex5 - Model Loading\Ex5.vcxproj", "{5698D357-B671-46C8-A831-9DBB5681CD3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x64.Build.0 = Release|x64
 		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x86.ActiveCfg = Release|Win32
 		{973C94DE-F84E-41F0-8F51-8E02A37A052D}.Release|x86.Build.0 = Release|Win32
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Debug|x64.ActiveCfg = Debug|x64
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Debug|x64.Build.0 = Debug|x64
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Debug|x86.ActiveCfg = Debug|Win32
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Debug|x86.Build.0 = Debug|Win32
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Release|x64.ActiveCfg = Release|x64
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Release|x64.Build.0 = Release|x64
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Release|x86.ActiveCfg = Release|Win32
+		{5698D357-B671-46C8-A831-9DBB5681CD3A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
