@@ -126,19 +126,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="Texture.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\Core\core.frag" />
-    <None Include="Shaders\Core\core.vert" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

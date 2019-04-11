@@ -63,11 +63,62 @@ class Mesh {
 
 		glBindVertexArray(0);
 	}
+
+	void Draw(Shader shader)
+	{
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		for (unsigned int i = 0; i < textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
+			// retrieve texture number (the N in diffuse_textureN)
+			std::string number;
+			std::string name = textures[i].type;
+			if (name == "texture_diffuse")
+				number = std::to_string(diffuseNr++);
+			else if (name == "texture_specular")
+				number = std::to_string(specularNr++);
+
+			shader.setFloat(("material." + name + number).c_str(), i);
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
+		glActiveTexture(GL_TEXTURE0);
+
+		// draw mesh
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 };
 
-System::System()
+class Model
 {
-}
+public:
+	/*  Functions   */
+	Model(char *path)
+	{
+		loadModel(path);
+	}
+	void Draw(Shader shader);
+private:
+	/*  Model Data  */
+	std::vector<Mesh> meshes;
+	std::string directory;
+	/*  Functions   */
+	void loadModel(std::string path);
+	void processNode(aiNode *node, const aiScene *scene);
+	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+		std::string typeName);
+
+	void Draw(Shader shader)
+	{
+		for (unsigned int i = 0; i < meshes.size(); i++)
+			meshes[i].Draw(shader);
+	}
+
+
+};
 
 
 System::~System()
@@ -162,14 +213,14 @@ int System::OpenGLSetup()
 int System::SystemSetup()
 {
 	coreShader = Shader("Shaders/Core/core.vert", "Shaders/Core/core.frag");
-	coreShader.Use();
+	coreShader.use();
 
 	return EXIT_SUCCESS;
 }
 
 void System::Run()
 {
-	coreShader.Use();
+	coreShader.use();
 
 	GLfloat vertices[] =
 	{
@@ -225,9 +276,9 @@ void System::Run()
 		glm::mat4 perspective = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 
 		int modelLoc, viewLoc, projLoc;
-		modelLoc = glGetUniformLocation(coreShader.program, "model");
-		viewLoc = glGetUniformLocation(coreShader.program, "view");
-		projLoc = glGetUniformLocation(coreShader.program, "proj");
+		modelLoc = glGetUniformLocation(coreShader.ID, "model");
+		viewLoc = glGetUniformLocation(coreShader.ID, "view");
+		projLoc = glGetUniformLocation(coreShader.ID, "proj");
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -259,7 +310,7 @@ void System::Run()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		coreShader.Use();
+		coreShader.use();
 
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 9);
@@ -305,7 +356,5 @@ void System::ShowFPS(GLFWwindow* window)
 
 void System::Finish()
 {
-	coreShader.Delete();
-
 	glfwTerminate();
 }

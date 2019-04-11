@@ -10,19 +10,15 @@
 
 #include <map>
 
-#include "Texture.h"
-
 
 class Shader
 {
 public:
 	GLuint program;
-	std::map<std::string, Texture> textures;
-	GLint textureQtd;
 
 public:
-	Shader() { textureQtd = 0; }
-	~Shader();
+	Shader() {};
+	~Shader() {};
 
 	Shader( const GLchar* vertexPath, const GLchar* fragmentPath ) : Shader() {
 
@@ -129,9 +125,6 @@ public:
 	void Delete() {
 		glDeleteProgram( this->program );
 	}
-
-	void UseTexture( std::string textureName );
-	void LoadTexture( char* path, char* textureUniformName, std::string textureName );
 
 };
 
