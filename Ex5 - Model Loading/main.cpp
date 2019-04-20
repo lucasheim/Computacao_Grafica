@@ -91,9 +91,9 @@ void onKeyPress() {
 		camera.processKeyboard(FORWARD, deltaTime);
 	if (glfwWrapper.onKeyPress(S))
 		camera.processKeyboard(BACKWARD, deltaTime);
-	if (glfwWrapper.onKeyPress(D))
-		camera.processKeyboard(LEFT, deltaTime);
 	if (glfwWrapper.onKeyPress(A))
+		camera.processKeyboard(LEFT, deltaTime);
+	if (glfwWrapper.onKeyPress(D))
 		camera.processKeyboard(RIGHT, deltaTime);
 }
 
