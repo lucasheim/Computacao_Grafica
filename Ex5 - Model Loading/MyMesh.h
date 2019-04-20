@@ -22,22 +22,16 @@ public:
 		for (Group group : groups) {
 			vector<GLfloat> finalVector;
 			for (Face face : group.faces) {
-				for (
-					int vertex = 0, normal = 0, texture = 0;
-					vertex < face.vertices.size();
-					vertex++, normal++, texture++
-				) {
-					finalVector.push_back(vertices[vertex].x);
-					finalVector.push_back(vertices[vertex].y);
-					finalVector.push_back(vertices[vertex].z);
+				finalVector.push_back(vertices[face.vertices[0]].x);
+				finalVector.push_back(vertices[face.vertices[1]].y);
+				finalVector.push_back(vertices[face.vertices[2]].z);
 
-					finalVector.push_back(textures[texture].x);
-					finalVector.push_back(textures[texture].y);
+				finalVector.push_back(textures[face.textures[0]].x);
+				finalVector.push_back(textures[face.textures[1]].y);
 
-					finalVector.push_back(normals[normal].x);
-					finalVector.push_back(normals[normal].y);
-					finalVector.push_back(normals[normal].z);
-				}
+				finalVector.push_back(normals[face.normals[0]].x);
+				finalVector.push_back(normals[face.normals[1]].y);
+				finalVector.push_back(normals[face.normals[2]].z);
 			}
 			group.setup(finalVector, shader);
 		}
