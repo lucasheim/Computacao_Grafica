@@ -51,9 +51,10 @@ int main() {
 	glewWrapper.initialize();
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
-	Model ourModel(OBJ_MODEL);
+	// Model ourModel(OBJ_MODEL);
 	OBJReader reader;
 	MyMesh mesh = reader.read(OBJ_MODEL);
+	mesh.setup(ourShader);
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();

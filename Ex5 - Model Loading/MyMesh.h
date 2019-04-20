@@ -6,37 +6,39 @@ public:
 	vector<glm::vec2> textures;
 	vector<Group> groups;
 
-	MyMesh() {
-		setupMesh();
-	}
-
 	void draw(Shader shader) {
 		for (Group group : groups) {
-			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindVertexArray(group.vao.vao);
+			glEnable(GL_TEXTURE_2D);
+			glUniform1i(shader.uniform("texture1"), group.material.id);
 			glBindTexture(GL_TEXTURE_2D, group.material.id);
-			
-			for (Face face : group.faces) {
-				glBindVertexArray(vao.vao);
-				glDrawElements(GL_TRIANGLES, face.vertices.size(), GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-			}
-			glActiveTexture(GL_TEXTURE0);
+			glDrawArrays(GL_TRIANGLES, 0, group.faces.size() * 3);
+			glDisable(GL_TEXTURE_2D);
 		}
 	}
 
-private:
-	VAO vao;
-	VBO vboNormals, vboVertices, vboTextures;
-	
-	void setupMesh() {
-		vboVertices.bind(vertices);
-		vboNormals.bind(normals);
-		vboTextures.bind(textures);
+	void setup(Shader shader) {
+		for (Group group : groups) {
+			vector<GLfloat> finalVector;
+			for (Face face : group.faces) {
+				for (
+					int vertex = 0, normal = 0, texture = 0;
+					vertex < face.vertices.size();
+					vertex++, normal++, texture++
+				) {
+					finalVector.push_back(vertices[vertex].x);
+					finalVector.push_back(vertices[vertex].y);
+					finalVector.push_back(vertices[vertex].z);
 
-		vao.bindVertices(vboVertices);
-		vao.bindNormals(vboNormals);
-		vao.bindTextures(vboTextures);
+					finalVector.push_back(normals[normal].x);
+					finalVector.push_back(normals[normal].y);
+					finalVector.push_back(normals[normal].z);
 
-		glBindVertexArray(0);
+					finalVector.push_back(textures[texture].x);
+					finalVector.push_back(textures[texture].y);
+				}
+			}
+			group.setup(finalVector, shader);
+		}
 	}
 };

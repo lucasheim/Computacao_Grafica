@@ -27,6 +27,14 @@ public:
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 	}
+
+	GLint attribute(const GLchar* name) {
+		return glGetAttribLocation(program, name);
+	}
+
+	GLint uniform(const GLchar * name) {
+		return glGetUniformLocation(program, name);
+	}
 	
 	void useProgram() {
 		glUseProgram(program);

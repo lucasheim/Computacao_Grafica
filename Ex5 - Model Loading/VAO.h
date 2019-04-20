@@ -24,4 +24,9 @@ public:
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	}
+
+	void bind(int start, int size, int stride) {
+		glEnableVertexAttribArray(start);
+		glVertexAttribPointer(start, size, GL_FLOAT, GL_FALSE, stride * sizeof(GLfloat), NULL);
+	}
 };

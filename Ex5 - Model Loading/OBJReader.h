@@ -44,6 +44,9 @@ private:
 	void loadTextures() {
 		ifstream file(directory + '/' + materialFile);
 		string materialName;
+		float ns;
+		unsigned int id;
+		glm::vec3 ka, kd, ks;
 		while (!file.eof()) {
 			string line, current;
 			stringstream sline;
@@ -55,16 +58,28 @@ private:
 			} else if (current == "map_Kd") {
 				string path;
 				sline >> path;
-				auto id = loadTexturesFromFile(path, directory);
-				insertIdIntoMaterial(id, materialName);
+				id = loadTexturesFromFile(path, directory);
+				insertInformationIntoMaterial(id, ka, kd, ks, ns, materialName);
+			} else if (current == "Ka") {
+				sline >> ka.x >> ka.y >> ka.z;
+			} else if (current == "Kd") {
+				sline >> kd.x >> kd.y >> kd.z;
+			} else if (current == "Ks") {
+				sline >> ks.x >> ks.y >> ks.z;
+			} else if (current == "Ns") {
+				sline >> ns;
 			}
 		}
 	}
 
-	void insertIdIntoMaterial(unsigned int id, string &materialName) {
+	void insertInformationIntoMaterial(unsigned int id, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, float ns, string &materialName) {
 		for (unsigned int i = 0; i < mesh.groups.size(); i++) {
 			if (mesh.groups[i].material.name == materialName) {
 				mesh.groups[i].material.id = id;
+				mesh.groups[i].material.ka = ka;
+				mesh.groups[i].material.kd = kd;
+				mesh.groups[i].material.ks = ks;
+				mesh.groups[i].material.ns = ns;
 			}
 		}
 	}
@@ -125,7 +140,6 @@ private:
 		mesh.textures.push_back(vertex);
 	}
 
-
 	unsigned int loadTexturesFromFile(string &filename, const string &directory) {
 		filename = directory + '/' + filename;
 
@@ -134,17 +148,10 @@ private:
 
 		int width, height, nrComponents;
 		unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-		if (data) {
-			GLenum format;
-			if (nrComponents == 1)
-				format = GL_RED;
-			else if (nrComponents == 3)
-				format = GL_RGB;
-			else if (nrComponents == 4)
-				format = GL_RGBA;
 
+		if (data) {
 			glBindTexture(GL_TEXTURE_2D, textureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
