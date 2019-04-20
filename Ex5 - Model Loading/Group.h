@@ -14,6 +14,8 @@ public:
 
 		setTextureIntoShader(shader);
 		setMaterialIntoShader(shader);
+		
+		glBindVertexArray(vao.vao);
 
 		vbo.bind(finalVector);
 		vao.bind(0, 3, 0);
@@ -25,7 +27,7 @@ public:
 
 private:
 	void setTextureIntoShader(Shader &shader) {
-		int textureLocation = shader.uniform("texture1");
+		int textureLocation = shader.uniform("texture");
 		glUniform1i(textureLocation, material.id);
 	}
 

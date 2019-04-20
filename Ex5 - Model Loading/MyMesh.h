@@ -9,8 +9,9 @@ public:
 	void draw(Shader shader) {
 		for (Group group : groups) {
 			glBindVertexArray(group.vao.vao);
+			int textureLocation = shader.uniform("texture");
 			glEnable(GL_TEXTURE_2D);
-			glUniform1i(shader.uniform("texture1"), group.material.id);
+			glUniform1i(textureLocation, group.material.id);
 			glBindTexture(GL_TEXTURE_2D, group.material.id);
 			glDrawArrays(GL_TRIANGLES, 0, group.faces.size() * 3);
 			glDisable(GL_TEXTURE_2D);
@@ -30,12 +31,12 @@ public:
 					finalVector.push_back(vertices[vertex].y);
 					finalVector.push_back(vertices[vertex].z);
 
+					finalVector.push_back(textures[texture].x);
+					finalVector.push_back(textures[texture].y);
+
 					finalVector.push_back(normals[normal].x);
 					finalVector.push_back(normals[normal].y);
 					finalVector.push_back(normals[normal].z);
-
-					finalVector.push_back(textures[texture].x);
-					finalVector.push_back(textures[texture].y);
 				}
 			}
 			group.setup(finalVector, shader);
