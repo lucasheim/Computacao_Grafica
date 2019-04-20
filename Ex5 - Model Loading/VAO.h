@@ -7,13 +7,19 @@ public:
 		glBindVertexArray(vao);
 	}
 
-	void bindColors(VBO colors) {
-		glBindBuffer(GL_ARRAY_BUFFER, colors.vbo);
+	void bindTextures(VBO textures) {
+		glBindBuffer(GL_ARRAY_BUFFER, textures.vbo);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	}
+
+	void bindNormals(VBO normals) {
+		glBindBuffer(GL_ARRAY_BUFFER, normals.vbo);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	}
 
-	void bindPositions(VBO positions) {
+	void bindVertices(VBO positions) {
 		glBindBuffer(GL_ARRAY_BUFFER, positions.vbo);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);

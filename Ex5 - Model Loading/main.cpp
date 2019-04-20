@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
@@ -12,8 +14,11 @@
 #include "GLEWWrapper.h"
 #include "VBO.h"
 #include "VAO.h"
-
-#include <iostream>
+#include "Material.h"
+#include "Face.h"
+#include "Group.h"
+#include "MyMesh.h"
+#include "OBJReader.h"
 
 #define VERTEX_SHADER "Shaders/model_loading.vs"
 #define FRAGMENT_SHADER "Shaders/model_loading.fs"
@@ -47,6 +52,8 @@ int main() {
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	Model ourModel(OBJ_MODEL);
+	OBJReader reader;
+	MyMesh mesh = reader.read(OBJ_MODEL);
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
@@ -58,7 +65,7 @@ int main() {
 		ourShader.useProgram();
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 view = camera.getViewMatrix();
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "projection"), 1, GL_FALSE, &projection[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "view"), 1, GL_FALSE, &view[0][0]);
 
@@ -66,7 +73,8 @@ int main() {
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); 
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
-		ourModel.draw(ourShader);
+		//ourModel.draw(ourShader);
+		mesh.draw(ourShader);
 
 		glfwWrapper.swapBuffers();
 		glfwPollEvents();
