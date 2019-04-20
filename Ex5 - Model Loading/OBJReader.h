@@ -112,11 +112,11 @@ private:
 		string current;
 		stringstream stoken(token);
 		getline(stoken, current, '/');
-		face.vertices.push_back(std::stoi(token) - 1);
+		face.vertices.push_back(std::stoi(current) - 1);
 		getline(stoken, current, '/');
-		face.textures.push_back(std::stoi(token) - 1);
+		face.textures.push_back(std::stoi(current) - 1);
 		getline(stoken, current, '/');
-		face.normals.push_back(std::stoi(token) - 1);
+		face.normals.push_back(std::stoi(current) - 1);
 	}
 
 	void insertVertex(std::stringstream &sline) {
