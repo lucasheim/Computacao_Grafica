@@ -53,7 +53,6 @@ int main() {
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	OBJReader reader;
 	MyMesh mesh = reader.read(OBJ_MODEL);
-	mesh.setup(ourShader);
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
@@ -73,7 +72,6 @@ int main() {
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); 
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
-		//ourModel.draw(ourShader);
 		mesh.draw(ourShader);
 
 		glfwWrapper.swapBuffers();

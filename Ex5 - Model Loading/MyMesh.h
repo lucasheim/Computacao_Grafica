@@ -8,6 +8,7 @@ public:
 
 	void draw(Shader shader) {
 		for (Group group : groups) {
+			this->setup(group, shader);
 			glBindVertexArray(group.vao.vao);
 			int textureLocation = shader.uniform("texture");
 			glEnable(GL_TEXTURE_2D);
@@ -18,22 +19,20 @@ public:
 		}
 	}
 
-	void setup(Shader shader) {
-		for (Group group : groups) {
-			vector<GLfloat> finalVector;
-			for (Face face : group.faces) {
-				finalVector.push_back(vertices[face.vertices[0]].x);
-				finalVector.push_back(vertices[face.vertices[1]].y);
-				finalVector.push_back(vertices[face.vertices[2]].z);
+	void setup(Group group, Shader shader) {
+		vector<GLfloat> finalVector;
+		for (Face face : group.faces) {
+			finalVector.push_back(vertices[face.vertices[0]].x);
+			finalVector.push_back(vertices[face.vertices[1]].y);
+			finalVector.push_back(vertices[face.vertices[2]].z);
 
-				finalVector.push_back(textures[face.textures[0]].x);
-				finalVector.push_back(textures[face.textures[1]].y);
+			finalVector.push_back(textures[face.textures[0]].x);
+			finalVector.push_back(textures[face.textures[1]].y);
 
-				finalVector.push_back(normals[face.normals[0]].x);
-				finalVector.push_back(normals[face.normals[1]].y);
-				finalVector.push_back(normals[face.normals[2]].z);
-			}
-			group.setup(finalVector, shader);
+			finalVector.push_back(normals[face.normals[0]].x);
+			finalVector.push_back(normals[face.normals[1]].y);
+			finalVector.push_back(normals[face.normals[2]].z);
 		}
+		group.setup(finalVector, shader);
 	}
 };
