@@ -97,17 +97,18 @@ private:
 	}
 
 	void insertFaces(std::stringstream &sline) {
+		Face face;
 		string token;
 		sline >> token;
-		insertFace(token);
+		insertFace(face, token);
 		sline >> token;
-		insertFace(token);
+		insertFace(face, token);
 		sline >> token;
-		insertFace(token);
+		insertFace(face, token);
+		mesh.groups.back().faces.push_back(face);
 	}
 
-	void insertFace(string token) {
-		Face face;
+	void insertFace(Face &face, string token) {
 		string current;
 		stringstream stoken(token);
 		getline(stoken, current, '/');
@@ -116,7 +117,6 @@ private:
 		face.textures.push_back(std::stoi(token) - 1);
 		getline(stoken, current, '/');
 		face.normals.push_back(std::stoi(token) - 1);
-		mesh.groups.back().faces.push_back(face);
 	}
 
 	void insertVertex(std::stringstream &sline) {
