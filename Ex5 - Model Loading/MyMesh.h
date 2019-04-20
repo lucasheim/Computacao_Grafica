@@ -8,6 +8,7 @@ public:
 
 	void draw(Shader shader) {
 		for (Group group : groups) {
+			//This will fucking kill performance as we build finalVector each time we draw
 			this->setup(group, shader);
 			glBindVertexArray(group.vao.vao);
 			int textureLocation = shader.uniform("texture");
