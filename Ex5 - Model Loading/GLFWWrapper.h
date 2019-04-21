@@ -78,6 +78,7 @@ private:
 	void setEnableVariables() {
 		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_TEXTURE_2D);
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 };

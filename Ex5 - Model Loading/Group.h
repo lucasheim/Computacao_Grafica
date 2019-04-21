@@ -7,8 +7,6 @@ public:
 	VBO vbo;
 
 	void setup(vector<GLfloat> finalVector, Shader shader) {
-		unsigned int texture;
-		glGenTextures(1, &texture);
 		glActiveTexture(GL_TEXTURE0 + material.id);
 		glBindTexture(GL_TEXTURE_2D, material.id);
 
