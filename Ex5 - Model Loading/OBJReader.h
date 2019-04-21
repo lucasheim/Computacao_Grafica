@@ -1,17 +1,34 @@
-
 class OBJReader {
 public:
-	MyMesh read(string const &path) {
+	MyMesh read(string const &path, Shader &shader) {
 		getDirectoryFromPath(path);
 		loadOBJ(path);
-		loadTextures();
+		loadTextures(shader);
 		return mesh;
 	}
 
 private:
-	string directory, materialFile;
+	Inserter *vertexInserter = new VertexInserter();
+	Inserter *groupInserter = new GroupInserter();
+	Inserter *normalInserter = new NormalInserter();
+	Inserter *textureInserter = new TextureInserter();
+	Inserter *faceInserter = new FaceInserter();
+	Inserter *materialFileInserter = new MaterialFileInserter();
+	Inserter *nullObjectInserter = new NullObjectInserter();
 	MyMesh mesh;
 	Group group;
+	string directory;
+
+	map<string, Inserter*> typeToInserterMap = {
+		{ "v", vertexInserter },
+		{ "vn", normalInserter },
+		{ "vt", textureInserter },
+		{ "f", faceInserter },
+		{ "g", groupInserter },
+		{ "mtllib", materialFileInserter },
+		{ "usemtl", groupInserter },
+		{ "#", nullObjectInserter }
+	};
 
 	void getDirectoryFromPath(string const &path) {
 		directory = path.substr(0, path.find_last_of('/'));
@@ -20,29 +37,19 @@ private:
 	void loadOBJ(string const &path) {
 		ifstream file(path);
 		while (!file.eof()) {
-			string line, current;
 			stringstream sline;
+			string line, current;
 			getline(file, line);
-			sline << line;
-			sline >> current;
-			if (current == "v") {
-				insertVertex(sline);
-			} else if (current == "vn") {
-				insertNormal(sline);
-			} else if (current == "vt") {
-				insertTexture(sline);
-			} else if (current == "g" || current == "usemtl") {
-				insertGroup(sline);
-			} else if (current == "f") {
-				insertFaces(sline);
-			} else if (current == "mtllib") {
-				insertMaterialFile(sline);
+			sline << line; sline >> current;
+			auto it = typeToInserterMap.find(current);
+			if (it != typeToInserterMap.end()) {
+				typeToInserterMap[current]->insert(mesh, group, sline);
 			}
 		}
 	}
 
-	void loadTextures() {
-		ifstream file(directory + '/' + materialFile);
+	void loadTextures(Shader &shader) {
+		ifstream file(directory + '/' + mesh.materialFile);
 		string materialName;
 		float ns;
 		unsigned int id;
@@ -55,18 +62,23 @@ private:
 			sline >> current;
 			if (current == "newmtl") {
 				sline >> materialName;
-			} else if (current == "map_Kd") {
+			}
+			else if (current == "map_Kd") {
 				string path;
 				sline >> path;
-				id = loadTexturesFromFile(path, directory);
+				id = loadTexturesFromFile(path, directory, shader);
 				insertInformationIntoMaterial(id, ka, kd, ks, ns, materialName);
-			} else if (current == "Ka") {
+			}
+			else if (current == "Ka") {
 				sline >> ka.x >> ka.y >> ka.z;
-			} else if (current == "Kd") {
+			}
+			else if (current == "Kd") {
 				sline >> kd.x >> kd.y >> kd.z;
-			} else if (current == "Ks") {
+			}
+			else if (current == "Ks") {
 				sline >> ks.x >> ks.y >> ks.z;
-			} else if (current == "Ns") {
+			}
+			else if (current == "Ns") {
 				sline >> ns;
 			}
 		}
@@ -84,65 +96,7 @@ private:
 		}
 	}
 
-	void insertMaterialFile(std::stringstream &sline) {
-		sline >> materialFile;
-	}
-
-	void insertGroup(std::stringstream &sline) {
-		Group newGroup;
-		group = newGroup;
-		string token;
-		sline >> token;
-		group.name = token;
-		group.material.name = token;
-		mesh.groups.push_back(group);
-	}
-
-	void insertFaces(std::stringstream &sline) {
-		Face face;
-		string token;
-		sline >> token;
-		insertFace(face, token);
-		sline >> token;
-		insertFace(face, token);
-		sline >> token;
-		insertFace(face, token);
-		mesh.groups.back().faces.push_back(face);
-	}
-
-	void insertFace(Face &face, string token) {
-		string current;
-		stringstream stoken(token);
-		getline(stoken, current, '/');
-		face.vertices.push_back(std::stoi(current) - 1);
-		getline(stoken, current, '/');
-		face.textures.push_back(std::stoi(current) - 1);
-		getline(stoken, current, '/');
-		face.normals.push_back(std::stoi(current) - 1);
-	}
-
-	void insertVertex(std::stringstream &sline) {
-		float x, y, z;
-		sline >> x >> y >> z;
-		glm::vec3 vertex(x, y, z);
-		mesh.vertices.push_back(vertex);
-	}
-
-	void insertNormal(std::stringstream &sline) {
-		float x, y, z;
-		sline >> x >> y >> z;
-		glm::vec3 vertex(x, y, z);
-		mesh.normals.push_back(vertex);
-	}
-
-	void insertTexture(std::stringstream &sline) {
-		float x, y;
-		sline >> x >> y;
-		glm::vec2 vertex(x, y);
-		mesh.textures.push_back(vertex);
-	}
-
-	unsigned int loadTexturesFromFile(string &filename, const string &directory) {
+	unsigned int loadTexturesFromFile(string &filename, const string &directory, Shader &shader) {
 		filename = directory + '/' + filename;
 
 		unsigned int textureID;
@@ -152,14 +106,19 @@ private:
 		unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 
 		if (data) {
+			glActiveTexture(GL_TEXTURE0 + textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
+
+			int textureLocation = shader.uniform("texture_diffuse1");
+			glUniform1i(textureLocation, textureID);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 			stbi_image_free(data);
 		}

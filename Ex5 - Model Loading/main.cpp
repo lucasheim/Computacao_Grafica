@@ -18,6 +18,7 @@
 #include "Face.h"
 #include "Group.h"
 #include "MyMesh.h"
+#include "Inserter.h"
 #include "OBJReader.h"
 
 #define VERTEX_SHADER "Shaders/model_loading.vs"
@@ -52,7 +53,7 @@ int main() {
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	OBJReader reader;
-	MyMesh mesh = reader.read(OBJ_MODEL);
+	MyMesh mesh = reader.read(OBJ_MODEL, ourShader);
 	mesh.setup(ourShader);
 
 	while (!glfwWrapper.windowShouldClose()) {

@@ -5,6 +5,7 @@ public:
 	vector<glm::vec3> normals;
 	vector<glm::vec2> textures;
 	vector<Group> groups;
+	string materialFile;
 
 	void draw(Shader shader) {
 		for (Group group : groups) {
