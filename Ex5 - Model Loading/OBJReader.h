@@ -89,6 +89,8 @@ private:
 	}
 
 	void insertGroup(std::stringstream &sline) {
+		Group newGroup;
+		group = newGroup;
 		string token;
 		sline >> token;
 		group.name = token;

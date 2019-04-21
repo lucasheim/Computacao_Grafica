@@ -53,6 +53,7 @@ int main() {
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	OBJReader reader;
 	MyMesh mesh = reader.read(OBJ_MODEL);
+	mesh.setup(ourShader);
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
