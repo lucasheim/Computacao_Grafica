@@ -10,7 +10,7 @@ public:
 		for (Group group : groups) {
 			glBindVertexArray(group.vao.vao);
 			glActiveTexture(GL_TEXTURE0 + group.material.id);
-			int textureLocation = shader.uniform("texture");
+			int textureLocation = shader.uniform("texture_diffuse1");
 			glUniform1i(textureLocation, group.material.id);
 			glBindTexture(GL_TEXTURE_2D, group.material.id);
 			glDrawArrays(GL_TRIANGLES, 0, group.faces.size() * 3);
