@@ -62,18 +62,27 @@ class FaceInserter : public Inserter {
 public:
 	void insert(MyMesh &mesh, Group &group, stringstream &sline) {
 		Face face;
-		string token;
-		sline >> token;
-		insertFace(face, token);
-		sline >> token;
-		insertFace(face, token);
-		sline >> token;
-		insertFace(face, token);
+		string first, second, third, fourth;
+		sline >> first;
+		insertVerticesIntoFace(face, first);
+		sline >> second;
+		insertVerticesIntoFace(face, second);
+		sline >> third;
+		insertVerticesIntoFace(face, third);
 		mesh.groups.back().faces.push_back(face);
+		sline >> fourth;
+		if (shouldCreateAnotherFace(fourth)) {
+			stringstream newLine(first + " " + third + " " + fourth);
+			insert(mesh, group, newLine);
+		}
 	}
 
 private:
-	void insertFace(Face &face, string token) {
+	bool shouldCreateAnotherFace(string sline) {
+		return sline != "";
+	}
+
+	void insertVerticesIntoFace(Face &face, string token) {
 		string current;
 		stringstream stoken(token);
 		getline(stoken, current, '/');

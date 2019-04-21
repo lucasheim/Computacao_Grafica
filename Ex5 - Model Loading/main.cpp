@@ -23,7 +23,7 @@
 
 #define VERTEX_SHADER "Shaders/model_loading.vs"
 #define FRAGMENT_SHADER "Shaders/model_loading.fs"
-#define OBJ_MODEL "nanosuit/nanosuit.obj"
+#define OBJ_MODEL "banana/otherbanana.obj"
 
 void onResize(GLFWwindow* window, int width, int height);
 void onScroll(GLFWwindow* window, double xpos, double ypos);

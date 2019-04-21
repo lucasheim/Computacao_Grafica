@@ -51,7 +51,7 @@ private:
 	void loadTextures(Shader &shader) {
 		ifstream file(directory + '/' + mesh.materialFile);
 		string materialName;
-		float ns;
+		float ns = 0;
 		unsigned int id;
 		glm::vec3 ka, kd, ks;
 		while (!file.eof()) {
