@@ -171,9 +171,17 @@ void onKeyPress() {
 			objects->at(selectedObject)->modelData.scale -= scale;
 		}
 	if (glfwWrapper.onKeyPress(V))
-		objects->at(selectedObject)->modelData.translate->x += 0.05f;
+		objects->at(selectedObject)->modelData.translate->x += 0.01f;
 	if (glfwWrapper.onKeyPress(B))
-		objects->at(selectedObject)->modelData.translate->x -= 0.05f;
+		objects->at(selectedObject)->modelData.translate->x -= 0.01f;
+	if (glfwWrapper.onKeyPress(Y))
+		objects->at(selectedObject)->modelData.translate->y += 0.01f;
+	if (glfwWrapper.onKeyPress(U))
+		objects->at(selectedObject)->modelData.translate->y -= 0.01f;
+	if (glfwWrapper.onKeyPress(H))
+		objects->at(selectedObject)->modelData.translate->z += 0.01f;
+	if (glfwWrapper.onKeyPress(J))
+		objects->at(selectedObject)->modelData.translate->z -= 0.01f;
 }
 
 void onResize(GLFWwindow* window, int width, int height) {
