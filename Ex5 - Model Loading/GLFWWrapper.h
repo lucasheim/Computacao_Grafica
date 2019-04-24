@@ -1,6 +1,6 @@
 #include <GLFW/glfw3.h>
 
-#define WINDOW_TITLE "Hello Triangle!"
+#define WINDOW_TITLE "CG - Grau A"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
