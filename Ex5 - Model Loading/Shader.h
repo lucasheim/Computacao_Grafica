@@ -1,6 +1,10 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -38,6 +42,26 @@ public:
 	
 	void useProgram() {
 		glUseProgram(program);
+	}
+
+	void setMat4(const std::string &name, glm::mat4 value) const
+	{
+		int location = glGetUniformLocation(this->program, name.c_str());
+		if (location == -1) {
+			std::cout << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << std::endl;
+		}
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+
+	void setVec3(const std::string &name, glm::vec3 value) const
+	{
+		int location = glGetUniformLocation(this->program, name.c_str());
+		if (location == -1) {
+			std::cout << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << std::endl;
+		}
+
+		glUniform3fv(location, 1, glm::value_ptr(value));
 	}
 
 private:

@@ -1,29 +1,15 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <iostream>
-
-#include "Shader.h"
-#include "Camera.h"
-#include "Model.h"
-#include "GLFWWrapper.h"
 #include "GLEWWrapper.h"
-#include "VBO.h"
-#include "VAO.h"
-#include "Material.h"
-#include "Face.h"
-#include "Group.h"
-#include "MyMesh.h"
-#include "Inserter.h"
-#include "OBJReader.h"
+#include "GLFWWrapper.h"
+#include "Shader.h"
+#include "Obj.h"
+#include "Camera.h"
 
 #define VERTEX_SHADER "Shaders/model_loading.vs"
 #define FRAGMENT_SHADER "Shaders/model_loading.fs"
-#define OBJ_MODEL "banana/otherbanana.obj"
+#define OBJ_MODEL "banana/banana.obj"
 
 void onResize(GLFWwindow* window, int width, int height);
 void onScroll(GLFWwindow* window, double xpos, double ypos);
@@ -52,9 +38,11 @@ int main() {
 	glewWrapper.initialize();
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
-	OBJReader reader;
-	MyMesh mesh = reader.read(OBJ_MODEL, ourShader);
-	mesh.setup(ourShader);
+	//OBJReader reader;
+	//MyMesh mesh = reader.read(OBJ_MODEL, ourShader);
+	//mesh.setup(ourShader);
+	Obj ob(OBJ_MODEL, VERTEX_SHADER, FRAGMENT_SHADER);
+	ob.createBuffers();
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
@@ -67,14 +55,15 @@ int main() {
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.getViewMatrix();
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "projection"), 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "view"), 1, GL_FALSE, &view[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "projection"), 1, GL_FALSE, &projection[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "view"), 1, GL_FALSE, &view[0][0]);
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); 
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
-		mesh.draw(ourShader);
+		//glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
+		//mesh.draw(ourShader);
+		ob.draw(projection, model, view);
 
 		glfwWrapper.swapBuffers();
 		glfwPollEvents();

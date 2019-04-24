@@ -88,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0;$(SolutionDir)External/GLEW/include;$(SolutionDir)External/GLFW/include;$(SolutionDir)External/SOIL2/include;$(SolutionDir)External/assimp/include;$(SolutionDir)External/GLM;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.16299.0;$(SolutionDir)External/GLEW/lib/Release/x64;$(SolutionDir)External/GLFW/lib-vc2015;$(SolutionDir)External/assimp/lib64;$(SolutionDir)External/SOIL2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -128,6 +129,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mtl.cpp" />
+    <ClCompile Include="Obj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -137,7 +140,9 @@
     <ClInclude Include="Group.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Mtl.h" />
     <ClInclude Include="MyMesh.h" />
+    <ClInclude Include="Obj.h" />
     <ClInclude Include="OBJReader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
