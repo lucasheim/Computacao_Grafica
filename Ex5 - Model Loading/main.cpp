@@ -29,11 +29,13 @@
 #define OBJ_STATUE "LibertStatue/LibertStatue.obj"
 #define OBJ_TABLE "table/table.obj"
 #define OBJ_STOOL "stool/stool.obj"
+#define OBJ_PLATE "plate/Tarelka.obj"
 
 void onResize(GLFWwindow* window, int width, int height);
 void onScroll(GLFWwindow* window, double xpos, double ypos);
 void onZoom(GLFWwindow* window, double xoffset, double yoffset);
 void onKeyPress();
+void onPress(GLFWwindow* window, int key, int scanCode, int action, int mods);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -64,7 +66,8 @@ int main() {
 	glfwWrapper.initialize()
 		.setFramebufferSizeCallback(onResize)
 		.setCursorPositionCallback(onScroll)
-		.setScrollCallback(onZoom);
+		.setScrollCallback(onZoom)
+		.setKeyCallback(onPress);
 	glewWrapper.initialize();
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
@@ -96,6 +99,10 @@ int main() {
 	createStool(modelData, firstStool);
 	modelData = { 0.0f, 0.5f, new glm::vec3(0.1f, 0.0f, -14.0f) };
 	createStool(modelData, firstStool);
+
+	modelData = { 0.0f, 6.42f, new glm::vec3(-0.33f, 2.83f, -9.68f) };
+	MyMesh* plate = reader.read(OBJ_PLATE, ourShader, modelData);
+	objects->push_back(plate);
 
 	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
 		(*object)->setup(ourShader);
@@ -167,31 +174,39 @@ void onKeyPress() {
 	if (glfwWrapper.onKeyPress(NINE))
 		selectedObject = 9;
 
-	if (glfwWrapper.onKeyPress(R))
-		objects->at(selectedObject)->modelData.rotation += 0.05f;
-	if (glfwWrapper.onKeyPress(T))
-		objects->at(selectedObject)->modelData.rotation -= 0.05f;
-	if (glfwWrapper.onKeyPress(F)) {
-		auto scale = objects->at(selectedObject)->modelData.scale * 0.1f;
-		objects->at(selectedObject)->modelData.scale += scale;
+	if (selectedObject != -1) {
+		if (glfwWrapper.onKeyPress(R))
+			objects->at(selectedObject)->modelData.rotation += 0.05f;
+		if (glfwWrapper.onKeyPress(T))
+			objects->at(selectedObject)->modelData.rotation -= 0.05f;
+		if (glfwWrapper.onKeyPress(B))
+			objects->at(selectedObject)->modelData.translate->x += 0.01f;
+		if (glfwWrapper.onKeyPress(V))
+			objects->at(selectedObject)->modelData.translate->x -= 0.01f;
+		if (glfwWrapper.onKeyPress(Y))
+			objects->at(selectedObject)->modelData.translate->y += 0.01f;
+		if (glfwWrapper.onKeyPress(U))
+			objects->at(selectedObject)->modelData.translate->y -= 0.01f;
+		if (glfwWrapper.onKeyPress(H))
+			objects->at(selectedObject)->modelData.translate->z += 0.01f;
+		if (glfwWrapper.onKeyPress(J))
+			objects->at(selectedObject)->modelData.translate->z -= 0.01f;
 	}
-	if (glfwWrapper.onKeyPress(G))
-		if (objects->at(selectedObject)->modelData.scale > 0) {
+}
+
+void onPress(GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	if (selectedObject != -1) {
+		if (key == F && action == GLFW_PRESS) {
 			auto scale = objects->at(selectedObject)->modelData.scale * 0.1f;
-			objects->at(selectedObject)->modelData.scale -= scale;
+			objects->at(selectedObject)->modelData.scale += scale;
 		}
-	if (glfwWrapper.onKeyPress(B))
-		objects->at(selectedObject)->modelData.translate->x += 0.01f;
-	if (glfwWrapper.onKeyPress(V))
-		objects->at(selectedObject)->modelData.translate->x -= 0.01f;
-	if (glfwWrapper.onKeyPress(Y))
-		objects->at(selectedObject)->modelData.translate->y += 0.01f;
-	if (glfwWrapper.onKeyPress(U))
-		objects->at(selectedObject)->modelData.translate->y -= 0.01f;
-	if (glfwWrapper.onKeyPress(H))
-		objects->at(selectedObject)->modelData.translate->z += 0.01f;
-	if (glfwWrapper.onKeyPress(J))
-		objects->at(selectedObject)->modelData.translate->z -= 0.01f;
+		else if (key == G && action == GLFW_PRESS) {
+			if (objects->at(selectedObject)->modelData.scale > 0) {
+				auto scale = objects->at(selectedObject)->modelData.scale * 0.1f;
+				objects->at(selectedObject)->modelData.scale -= scale;
+			}
+		}
+	}
 }
 
 void onResize(GLFWwindow* window, int width, int height) {
