@@ -38,7 +38,7 @@ void onKeyPress();
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 5.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 7.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -63,28 +63,33 @@ int main() {
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	OBJReader reader;
-	
-	//mesh.setup(ourShader);
-	//Model banana(OBJ_BANANA);
-	//MyMesh banana = reader.read(OBJ_BANANA, ourShader);
-	//objects.push_back(banana);
-	//Model nanosuit(OBJ_NANOSUIT);
-	//MyMesh *nanosuit = reader.read(OBJ_NANOSUIT, ourShader);
-	//nanosuit->setup(ourShader);
-	//objects->push_back(nanosuit);
+
 	//Model statue(OBJ_STATUE);
 	//objects.push_back(statue);
+	
 	//Model* table = new Model(OBJ_TABLE);
-	MyMesh* table = reader.read(OBJ_TABLE, ourShader, new glm::vec3(0.0f, 0.0f, -10.0f));
-	table->setup(ourShader);
+	ModelData modelData = { 0.0f, 2.0f, new glm::vec3(0.0f, 0.0f, -10.0f) };
+	MyMesh* table = reader.read(OBJ_TABLE, ourShader, modelData);
 	objects->push_back(table);
+	
 	//Model* stool = new Model(OBJ_STOOL);
-	MyMesh* firstStool = reader.read(OBJ_STOOL, ourShader, new glm::vec3(10.0f, 0.0f, -10.0f));
-	firstStool->setup(ourShader);
+	modelData = { 0.0f, 0.5f, new glm::vec3(10.0f, 0.0f, -10.0f) };
+	MyMesh* firstStool = reader.read(OBJ_STOOL, ourShader, modelData);
 	objects->push_back(firstStool);
-	MyMesh* secondStool = new MyMesh(firstStool->vertices, firstStool->normals, firstStool->textures, firstStool->groups, new glm::vec3(5.0f, 0.0f, -10.0f));
-	secondStool->setup(ourShader);
+	
+	modelData = { 0.0f, 0.5f, new glm::vec3(5.0f, 0.0f, -10.0f) };
+	MyMesh* secondStool = new MyMesh(modelData);
+	secondStool->copy(firstStool);
 	objects->push_back(secondStool);
+	
+	modelData = { 0.0f, 0.5f, new glm::vec3(-5.0f, 0.0f, -10.0f) };
+	MyMesh* thirdStool = new MyMesh(modelData);
+	thirdStool->copy(firstStool);
+	objects->push_back(thirdStool);
+
+	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
+		(*object)->setup(ourShader);
+	}
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
@@ -106,12 +111,9 @@ int main() {
 			model = glm::rotate(model, glm::radians(objects->at(i)->modelData.rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(objects->at(i)->modelData.scale, objects->at(i)->modelData.scale, objects->at(i)->modelData.scale));
 			glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
+			glUniform1f(glGetUniformLocation(ourShader.program, "colorPercentage"), selectedObject == i ? 0.2f : 0.0f);
+
 			objects->at(i)->draw(ourShader);
-			
-			if (selectedObject == i)
-				glUniform1f(glGetUniformLocation(ourShader.program, "colorPercentage"), 0.2f);
-			else
-				glUniform1f(glGetUniformLocation(ourShader.program, "colorPercentage"), 0.0f);
 		}
 
 		glfwWrapper.swapBuffers();

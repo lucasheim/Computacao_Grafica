@@ -6,25 +6,22 @@ public:
 	ModelData modelData;
 	vector<Group*>* groups;
 	string materialFile;
-	
-	MyMesh(glm::vec3* initialPosition) {
+		
+	MyMesh(ModelData &modelData) {
 		vertices = new vector<glm::vec3*>();
 		normals = new vector<glm::vec3*>();
 		textures = new vector<glm::vec2*>();
 		groups = new vector<Group*>();
-		modelData.rotation = 0.0f;
-		modelData.scale = 1.0f;
-		modelData.translate = initialPosition;
+		this->modelData.rotation = modelData.rotation;
+		this->modelData.scale = modelData.scale;
+		this->modelData.translate = modelData.translate;
 	}
 
-	MyMesh(vector<glm::vec3*>* vertices, vector<glm::vec3*>* normals, vector<glm::vec2*>* textures, vector<Group*>* groups, glm::vec3* initialPosition) {
-		this->vertices = vertices;
-		this->normals = normals;
-		this->textures = textures;
-		this->groups = groups;
-		modelData.rotation = 0.0f;
-		modelData.scale = 1.0f;
-		modelData.translate = initialPosition;
+	void copy(MyMesh* origin) {
+		this->vertices = origin->vertices;
+		this->normals = origin->normals;
+		this->textures = origin->textures;
+		this->groups = origin->groups;
 	}
 	
 	void draw(Shader shader) {
