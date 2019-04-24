@@ -38,7 +38,7 @@ void onKeyPress();
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 7.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 7.0f, 10.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -53,6 +53,12 @@ GLEWWrapper glewWrapper;
 vector<MyMesh*>* objects = new vector<MyMesh*>();
 //vector<Model*>* objects = new vector<Model*>();
 int selectedObject = -1;
+
+void createStool(ModelData &modelData, MyMesh *firstStool) {
+	MyMesh* stool = new MyMesh(modelData);
+	stool->copy(firstStool);
+	objects->push_back(stool);
+}
 
 int main() {
 	glfwWrapper.initialize()
@@ -73,19 +79,23 @@ int main() {
 	objects->push_back(table);
 	
 	//Model* stool = new Model(OBJ_STOOL);
-	modelData = { 0.0f, 0.5f, new glm::vec3(10.0f, 0.0f, -10.0f) };
+	modelData = { 0.0f, 0.5f, new glm::vec3(2.0f, 0.0f, -7.4f) };
 	MyMesh* firstStool = reader.read(OBJ_STOOL, ourShader, modelData);
 	objects->push_back(firstStool);
-	
-	modelData = { 0.0f, 0.5f, new glm::vec3(5.0f, 0.0f, -10.0f) };
-	MyMesh* secondStool = new MyMesh(modelData);
-	secondStool->copy(firstStool);
-	objects->push_back(secondStool);
-	
-	modelData = { 0.0f, 0.5f, new glm::vec3(-5.0f, 0.0f, -10.0f) };
-	MyMesh* thirdStool = new MyMesh(modelData);
-	thirdStool->copy(firstStool);
-	objects->push_back(thirdStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(0.1f, 0.0f, -5.9f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(-3.5f, 0.0f, -9.7f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(-1.8f, 0.0f, -7.4f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(3.5f, 0.0f, -9.7f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(2.0f, 0.0f, -12.0f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(-1.8f, 0.0f, -12.0f) };
+	createStool(modelData, firstStool);
+	modelData = { 0.0f, 0.5f, new glm::vec3(0.1f, 0.0f, -14.0f) };
+	createStool(modelData, firstStool);
 
 	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
 		(*object)->setup(ourShader);
@@ -170,9 +180,9 @@ void onKeyPress() {
 			auto scale = objects->at(selectedObject)->modelData.scale * 0.1f;
 			objects->at(selectedObject)->modelData.scale -= scale;
 		}
-	if (glfwWrapper.onKeyPress(V))
-		objects->at(selectedObject)->modelData.translate->x += 0.01f;
 	if (glfwWrapper.onKeyPress(B))
+		objects->at(selectedObject)->modelData.translate->x += 0.01f;
+	if (glfwWrapper.onKeyPress(V))
 		objects->at(selectedObject)->modelData.translate->x -= 0.01f;
 	if (glfwWrapper.onKeyPress(Y))
 		objects->at(selectedObject)->modelData.translate->y += 0.01f;
