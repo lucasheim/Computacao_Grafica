@@ -21,15 +21,29 @@ using namespace std;
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
 
+struct ModelData {
+	float rotation;
+	float scale;
+	float xTranslate;
+	float yTranslate;
+	float zTranslate;
+};
+
 class Model {
 public:
 	vector<Texture> textures_loaded;
 	vector<Mesh> meshes;
+	ModelData modelData;
 	string directory;
 	bool gammaCorrection;
 
 	Model(string const &path, bool gamma = false) : gammaCorrection(gamma) {
 		loadModel(path);
+		modelData.rotation = 0.0f;
+		modelData.scale = 1.0f;
+		modelData.xTranslate = 0.0f;
+		modelData.yTranslate = 0.0f;
+		modelData.zTranslate = 0.0f;
 	}
 
 	void draw(Shader shader) {
@@ -83,14 +97,6 @@ private:
 			} else {
 				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 			}
-			vector.x = mesh->mTangents[i].x;
-			vector.y = mesh->mTangents[i].y;
-			vector.z = mesh->mTangents[i].z;
-			vertex.Tangent = vector;
-			vector.x = mesh->mBitangents[i].x;
-			vector.y = mesh->mBitangents[i].y;
-			vector.z = mesh->mBitangents[i].z;
-			vertex.Bitangent = vector;
 			vertices.push_back(vertex);
 		}
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {

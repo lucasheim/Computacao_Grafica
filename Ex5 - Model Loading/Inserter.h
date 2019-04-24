@@ -53,7 +53,7 @@ public:
 	void insert(MyMesh &mesh, Group &group, stringstream &sline) {
 		float x, y;
 		sline >> x >> y;
-		glm::vec2 vertex(x, y);
+		glm::vec2 vertex(x, (1.0 - y));
 		mesh.textures.push_back(vertex);
 	}
 };
