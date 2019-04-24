@@ -69,6 +69,11 @@ public:
 		return *this;
 	}
 
+	GLFWWrapper setKeyCallback(GLFWkeyfun callback) {
+		glfwSetKeyCallback(window, callback);
+		return *this;
+	}
+
 	int windowShouldClose() {
 		return glfwWindowShouldClose(window);
 	}
