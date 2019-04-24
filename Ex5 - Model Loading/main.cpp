@@ -29,6 +29,7 @@
 #define OBJ_STATUE "LibertStatue/LibertStatue.obj"
 #define OBJ_TABLE "table/table.obj"
 #define OBJ_STOOL "stool/stool.obj"
+#define OBJ_PLATE "plate/Tarelka.obj"
 
 void onResize(GLFWwindow* window, int width, int height);
 void onScroll(GLFWwindow* window, double xpos, double ypos);
@@ -88,6 +89,10 @@ int main() {
 	MyMesh* thirdStool = new MyMesh(modelData);
 	thirdStool->copy(firstStool);
 	objects->push_back(thirdStool);
+
+	modelData = { 0.0f, 6.42f, new glm::vec3(-0.33f, 2.83f, -9.68f) };
+	MyMesh* plate = reader.read(OBJ_PLATE, ourShader, modelData);
+	objects->push_back(plate);
 
 	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
 		(*object)->setup(ourShader);
