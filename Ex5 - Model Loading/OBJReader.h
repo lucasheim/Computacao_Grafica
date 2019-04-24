@@ -1,6 +1,6 @@
 class OBJReader {
 public:
-	MyMesh read(string const &path, Shader &shader) {
+	MyMesh* read(string const &path, Shader &shader) {
 		getDirectoryFromPath(path);
 		loadOBJ(path);
 		loadTextures(shader);
@@ -15,8 +15,8 @@ private:
 	Inserter *faceInserter = new FaceInserter();
 	Inserter *materialFileInserter = new MaterialFileInserter();
 	Inserter *nullObjectInserter = new NullObjectInserter();
-	MyMesh mesh;
-	Group group;
+	MyMesh *mesh;
+	Group *group;
 	string directory;
 
 	map<string, Inserter*> typeToInserterMap = {
@@ -36,6 +36,7 @@ private:
 
 	void loadOBJ(string const &path) {
 		ifstream file(path);
+		mesh = new MyMesh();
 		while (!file.eof()) {
 			stringstream sline;
 			string line, current;
@@ -46,10 +47,11 @@ private:
 				typeToInserterMap[current]->insert(mesh, group, sline);
 			}
 		}
+		file.close();
 	}
 
 	void loadTextures(Shader &shader) {
-		ifstream file(directory + '/' + mesh.materialFile);
+		ifstream file(directory + '/' + mesh->materialFile);
 		string materialName;
 		float ns = 0;
 		unsigned int id;
@@ -82,16 +84,17 @@ private:
 				sline >> ns;
 			}
 		}
+		file.close();
 	}
 
 	void insertInformationIntoMaterial(unsigned int id, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, float ns, string &materialName) {
-		for (unsigned int i = 0; i < mesh.groups.size(); i++) {
-			if (mesh.groups[i].material.name == materialName) {
-				mesh.groups[i].material.id = id;
-				mesh.groups[i].material.ka = ka;
-				mesh.groups[i].material.kd = kd;
-				mesh.groups[i].material.ks = ks;
-				mesh.groups[i].material.ns = ns;
+		for (unsigned int i = 0; i < mesh->groups->size(); i++) {
+			if (mesh->groups->at(i)->material->name == materialName) {
+				mesh->groups->at(i)->material->id = id;
+				mesh->groups->at(i)->material->ka = ka;
+				mesh->groups->at(i)->material->kd = kd;
+				mesh->groups->at(i)->material->ks = ks;
+				mesh->groups->at(i)->material->ns = ns;
 			}
 		}
 	}

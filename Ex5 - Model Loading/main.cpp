@@ -50,7 +50,8 @@ float translation = -1.0f;
 GLFWWrapper glfwWrapper;
 GLEWWrapper glewWrapper;
 
-vector<Model> objects;
+vector<MyMesh*>* objects = new vector<MyMesh*>();
+//vector<Model> objects;
 int selectedObject = -1;
 
 int main() {
@@ -61,17 +62,20 @@ int main() {
 	glewWrapper.initialize();
 
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
-	//OBJReader reader;
-	//MyMesh mesh = reader.read(OBJ_MODEL, ourShader);
+	OBJReader reader;
+	
 	//mesh.setup(ourShader);
-	Model banana(OBJ_BANANA);
-	objects.push_back(banana);
-	Model nanosuit(OBJ_NANOSUIT);
-	objects.push_back(nanosuit);
-	Model statue(OBJ_STATUE);
-	objects.push_back(statue);
-	Model table(OBJ_TABLE);
-	objects.push_back(table);
+	//Model banana(OBJ_BANANA);
+	//MyMesh banana = reader.read(OBJ_BANANA, ourShader);
+	//objects.push_back(banana);
+	//Model nanosuit(OBJ_NANOSUIT);
+	MyMesh *nanosuit = reader.read(OBJ_NANOSUIT, ourShader);
+	nanosuit->setup(ourShader);
+	objects->push_back(nanosuit);
+	//Model statue(OBJ_STATUE);
+	//objects.push_back(statue);
+	// Model table(OBJ_TABLE);
+	// objects.push_back(table);
 
 	while (!glfwWrapper.windowShouldClose()) {
 		float currentFrame = glfwGetTime();
@@ -82,19 +86,19 @@ int main() {
 		glewWrapper.clear();
 		ourShader.useProgram();
 
-		for (int i = 0; i < objects.size(); i++) {
+		for (int i = 0; i < objects->size(); i++) {
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			glm::mat4 view = camera.getViewMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "projection"), 1, GL_FALSE, &projection[0][0]);
 			glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "view"), 1, GL_FALSE, &view[0][0]);
 
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(objects[i].modelData.xTranslate, objects[i].modelData.yTranslate, objects[i].modelData.zTranslate));
-			model = glm::rotate(model, glm::radians(objects[i].modelData.rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(objects[i].modelData.scale, objects[i].modelData.scale, objects[i].modelData.scale));
+			model = glm::translate(model, glm::vec3(objects->at(i)->modelData.xTranslate, objects->at(i)->modelData.yTranslate, objects->at(i)->modelData.zTranslate));
+			model = glm::rotate(model, glm::radians(objects->at(i)->modelData.rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(objects->at(i)->modelData.scale, objects->at(i)->modelData.scale, objects->at(i)->modelData.scale));
 			glUniformMatrix4fv(glGetUniformLocation(ourShader.program, "model"), 1, GL_FALSE, &model[0][0]);
 			//mesh.draw(ourShader);
-			objects[i].draw(ourShader);
+			objects->at(i)->draw(ourShader);
 		}
 
 		glfwWrapper.swapBuffers();
@@ -116,6 +120,7 @@ void onKeyPress() {
 		camera.processKeyboard(LEFT, deltaTime);
 	if (glfwWrapper.onKeyPress(D))
 		camera.processKeyboard(RIGHT, deltaTime);
+
 	if (glfwWrapper.onKeyPress(ZERO))
 		selectedObject = 0;
 	if (glfwWrapper.onKeyPress(ONE))
@@ -138,19 +143,19 @@ void onKeyPress() {
 		selectedObject = 9;
 
 	if (glfwWrapper.onKeyPress(R))
-		objects[selectedObject].modelData.rotation += 0.05f;
+		objects->at(selectedObject)->modelData.rotation += 0.05f;
 	if (glfwWrapper.onKeyPress(T))
-		objects[selectedObject].modelData.rotation -= 0.05f;
+		objects->at(selectedObject)->modelData.rotation -= 0.05f;
 	if (glfwWrapper.onKeyPress(F))
-		objects[selectedObject].modelData.scale += 0.005f;
+		objects->at(selectedObject)->modelData.scale += 0.005f;
 	if (glfwWrapper.onKeyPress(G))
-		if (objects[selectedObject].modelData.scale > 0) {
-			objects[selectedObject].modelData.scale -= 0.005f;
+		if (objects->at(selectedObject)->modelData.scale > 0) {
+			objects->at(selectedObject)->modelData.scale -= 0.005f;
 		}
 	if (glfwWrapper.onKeyPress(V))
-		objects[selectedObject].modelData.xTranslate += 0.05f;
+		objects->at(selectedObject)->modelData.xTranslate += 0.05f;
 	if (glfwWrapper.onKeyPress(B))
-		objects[selectedObject].modelData.xTranslate -= 0.05f;
+		objects->at(selectedObject)->modelData.xTranslate -= 0.05f;
 }
 
 void onResize(GLFWwindow* window, int width, int height) {

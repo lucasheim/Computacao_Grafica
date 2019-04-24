@@ -1,10 +1,15 @@
 class Group {
 public:
-	vector<Face> faces;
-	Material material;
+	vector<Face*>* faces;
+	Material* material;
 	string name;
 	VAO vao;
 	VBO vbo;
+
+	Group() {
+		faces = new vector<Face*>();
+		material = new Material();
+	}
 
 	void setup(vector<GLfloat> finalVector, Shader shader) {
 		glBindVertexArray(vao.vao);
