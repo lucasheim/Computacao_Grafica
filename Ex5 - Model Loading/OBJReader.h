@@ -112,9 +112,6 @@ private:
 			glActiveTexture(GL_TEXTURE0 + textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
 
-			int textureLocation = shader.uniform("texture_diffuse1");
-			glUniform1i(textureLocation, textureID);
-
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

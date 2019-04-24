@@ -100,9 +100,10 @@ int main() {
 	modelData = { 0.0f, 0.5f, new glm::vec3(0.1f, 0.0f, -14.0f) };
 	createStool(modelData, firstStool);
 
-	modelData = { 0.0f, 6.42f, new glm::vec3(-0.33f, 2.83f, -9.68f) };
-	MyMesh* plate = reader.read(OBJ_PLATE, ourShader, modelData);
+	modelData = { 0.0f, 0.33f, new glm::vec3(0.16f, 2.83f, -9.68f) };
+	MyMesh* plate = reader.read(OBJ_BANANA, ourShader, modelData);
 	objects->push_back(plate);
+
 
 	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
 		(*object)->setup(ourShader);
