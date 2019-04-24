@@ -7,18 +7,26 @@ public:
 	vector<Group*>* groups;
 	string materialFile;
 	
-	MyMesh() {
+	MyMesh(glm::vec3* initialPosition) {
 		vertices = new vector<glm::vec3*>();
 		normals = new vector<glm::vec3*>();
 		textures = new vector<glm::vec2*>();
 		groups = new vector<Group*>();
 		modelData.rotation = 0.0f;
 		modelData.scale = 1.0f;
-		modelData.xTranslate = 0.0f;
-		modelData.yTranslate = 0.0f;
-		modelData.zTranslate = 0.0f;
+		modelData.translate = initialPosition;
 	}
 
+	MyMesh(vector<glm::vec3*>* vertices, vector<glm::vec3*>* normals, vector<glm::vec2*>* textures, vector<Group*>* groups, glm::vec3* initialPosition) {
+		this->vertices = vertices;
+		this->normals = normals;
+		this->textures = textures;
+		this->groups = groups;
+		modelData.rotation = 0.0f;
+		modelData.scale = 1.0f;
+		modelData.translate = initialPosition;
+	}
+	
 	void draw(Shader shader) {
 		for (vector<Group*>::iterator group = groups->begin(); group != groups->end(); ++group) {
 			glBindVertexArray((*group)->vao.vao);

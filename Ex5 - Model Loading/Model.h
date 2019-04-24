@@ -24,9 +24,7 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 struct ModelData {
 	float rotation;
 	float scale;
-	float xTranslate;
-	float yTranslate;
-	float zTranslate;
+	glm::vec3* translate;
 };
 
 class Model {
@@ -41,9 +39,7 @@ public:
 		loadModel(path);
 		modelData.rotation = 0.0f;
 		modelData.scale = 1.0f;
-		modelData.xTranslate = 0.0f;
-		modelData.yTranslate = 0.0f;
-		modelData.zTranslate = 0.0f;
+		modelData.translate = new glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 
 	void draw(Shader shader) {

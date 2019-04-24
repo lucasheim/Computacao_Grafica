@@ -1,8 +1,8 @@
 class OBJReader {
 public:
-	MyMesh* read(string const &path, Shader &shader) {
+	MyMesh* read(string const &path, Shader &shader, glm::vec3 *initialPosition) {
 		getDirectoryFromPath(path);
-		loadOBJ(path);
+		loadOBJ(path, initialPosition);
 		loadTextures(shader);
 		return mesh;
 	}
@@ -34,9 +34,9 @@ private:
 		directory = path.substr(0, path.find_last_of('/'));
 	}
 
-	void loadOBJ(string const &path) {
+	void loadOBJ(string const &path, glm::vec3 *initialPosition) {
 		ifstream file(path);
-		mesh = new MyMesh();
+		mesh = new MyMesh(initialPosition);
 		while (!file.eof()) {
 			stringstream sline;
 			string line, current;
