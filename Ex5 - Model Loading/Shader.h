@@ -8,6 +8,12 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+struct ModelData {
+	float rotation;
+	float scale;
+	glm::vec3* translate;
+};
+
 class Shader {
 public:
 	GLuint program;

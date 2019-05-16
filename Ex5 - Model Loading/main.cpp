@@ -1,3 +1,5 @@
+using namespace std;
+
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
@@ -6,10 +8,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
 
+#include "stb_image.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Model.h"
 #include "GLFWWrapper.h"
 #include "GLEWWrapper.h"
 #include "VBO.h"
@@ -20,7 +27,6 @@
 #include "MyMesh.h"
 #include "Inserter.h"
 #include "OBJReader.h"
-#include "Model.h"
 
 #define VERTEX_SHADER "Shaders/model_loading.vs"
 #define FRAGMENT_SHADER "Shaders/model_loading.fs"
@@ -53,7 +59,6 @@ GLFWWrapper glfwWrapper;
 GLEWWrapper glewWrapper;
 
 vector<MyMesh*>* objects = new vector<MyMesh*>();
-//vector<Model*>* objects = new vector<Model*>();
 int selectedObject = -1;
 
 void createStool(ModelData &modelData, MyMesh *firstStool) {
@@ -73,15 +78,10 @@ int main() {
 	Shader ourShader(VERTEX_SHADER, FRAGMENT_SHADER);
 	OBJReader reader;
 
-	//Model statue(OBJ_STATUE);
-	//objects.push_back(statue);
-	
-	//Model* table = new Model(OBJ_TABLE);
 	ModelData modelData = { 0.0f, 2.0f, new glm::vec3(0.0f, 0.0f, -10.0f) };
 	MyMesh* table = reader.read(OBJ_TABLE, ourShader, modelData);
 	objects->push_back(table);
 	
-	//Model* stool = new Model(OBJ_STOOL);
 	modelData = { 0.0f, 0.5f, new glm::vec3(2.0f, 0.0f, -7.4f) };
 	MyMesh* firstStool = reader.read(OBJ_STOOL, ourShader, modelData);
 	objects->push_back(firstStool);
