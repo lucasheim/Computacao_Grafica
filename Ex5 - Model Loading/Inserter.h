@@ -1,16 +1,16 @@
 class Inserter {
 public:
-	virtual void insert(MyMesh *mesh, Group *group, stringstream &line) = 0;
+	virtual void insert(Mesh *mesh, Group *group, stringstream &line) = 0;
 };
 
 class NullObjectInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &line) {}
+	void insert(Mesh *mesh, Group *group, stringstream &line) {}
 };
 
 class VertexInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		float x, y, z;
 		sline >> x >> y >> z;
 		glm::vec3* vertex = new glm::vec3(x, y, z);
@@ -20,7 +20,7 @@ public:
 
 class GroupInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		Group *newGroup = new Group();
 		group = newGroup;
 		string token;
@@ -33,7 +33,7 @@ public:
 
 class NormalInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		float x, y, z;
 		sline >> x >> y >> z;
 		glm::vec3 *vertex = new glm::vec3(x, y, z);
@@ -43,14 +43,14 @@ public:
 
 class MaterialFileInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		sline >> mesh->materialFile;
 	}
 };
 
 class TextureInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		float x, y;
 		sline >> x >> y;
 		glm::vec2* vertex = new glm::vec2(x, (1.0f - y));
@@ -60,7 +60,7 @@ public:
 
 class FaceInserter : public Inserter {
 public:
-	void insert(MyMesh *mesh, Group *group, stringstream &sline) {
+	void insert(Mesh *mesh, Group *group, stringstream &sline) {
 		Face* face = new Face();
 		string first, second, third, fourth;
 		sline >> first;

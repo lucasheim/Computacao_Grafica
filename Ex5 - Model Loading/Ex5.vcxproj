@@ -136,7 +136,7 @@
     <ClInclude Include="GLFWWrapper.h" />
     <ClInclude Include="Group.h" />
     <ClInclude Include="Material.h" />
-    <ClInclude Include="MyMesh.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="OBJReader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />

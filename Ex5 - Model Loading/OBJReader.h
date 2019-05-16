@@ -1,6 +1,6 @@
 class OBJReader {
 public:
-	MyMesh* read(string const &path, Shader &shader, ModelData &modelData) {
+	Mesh* read(string const &path, Shader &shader, ModelData &modelData) {
 		getDirectoryFromPath(path);
 		loadOBJ(path, modelData);
 		loadTextures(shader);
@@ -15,7 +15,7 @@ private:
 	Inserter *faceInserter = new FaceInserter();
 	Inserter *materialFileInserter = new MaterialFileInserter();
 	Inserter *nullObjectInserter = new NullObjectInserter();
-	MyMesh *mesh;
+	Mesh *mesh;
 	Group *group;
 	string directory;
 
@@ -36,7 +36,7 @@ private:
 
 	void loadOBJ(string const &path, ModelData &modelData) {
 		ifstream file(path);
-		mesh = new MyMesh(modelData);
+		mesh = new Mesh(modelData);
 		while (!file.eof()) {
 			stringstream sline;
 			string line, current;

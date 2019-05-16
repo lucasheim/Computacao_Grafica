@@ -24,7 +24,7 @@ using namespace std;
 #include "Material.h"
 #include "Face.h"
 #include "Group.h"
-#include "MyMesh.h"
+#include "Mesh.h"
 #include "Inserter.h"
 #include "OBJReader.h"
 
@@ -58,11 +58,11 @@ float translation = -1.0f;
 GLFWWrapper glfwWrapper;
 GLEWWrapper glewWrapper;
 
-vector<MyMesh*>* objects = new vector<MyMesh*>();
+vector<Mesh*>* objects = new vector<Mesh*>();
 int selectedObject = -1;
 
-void createStool(ModelData &modelData, MyMesh *firstStool) {
-	MyMesh* stool = new MyMesh(modelData);
+void createStool(ModelData &modelData, Mesh *firstStool) {
+	Mesh* stool = new Mesh(modelData);
 	stool->copy(firstStool);
 	objects->push_back(stool);
 }
@@ -79,11 +79,11 @@ int main() {
 	OBJReader reader;
 
 	ModelData modelData = { 0.0f, 2.0f, new glm::vec3(0.0f, 0.0f, -10.0f) };
-	MyMesh* table = reader.read(OBJ_TABLE, ourShader, modelData);
+	Mesh* table = reader.read(OBJ_TABLE, ourShader, modelData);
 	objects->push_back(table);
 	
 	modelData = { 0.0f, 0.5f, new glm::vec3(2.0f, 0.0f, -7.4f) };
-	MyMesh* firstStool = reader.read(OBJ_STOOL, ourShader, modelData);
+	Mesh* firstStool = reader.read(OBJ_STOOL, ourShader, modelData);
 	objects->push_back(firstStool);
 	modelData = { 0.0f, 0.5f, new glm::vec3(0.1f, 0.0f, -5.9f) };
 	createStool(modelData, firstStool);
@@ -101,11 +101,11 @@ int main() {
 	createStool(modelData, firstStool);
 
 	modelData = { 0.0f, 0.33f, new glm::vec3(0.16f, 2.83f, -9.68f) };
-	MyMesh* plate = reader.read(OBJ_BANANA, ourShader, modelData);
+	Mesh* plate = reader.read(OBJ_BANANA, ourShader, modelData);
 	objects->push_back(plate);
 
 
-	for (vector<MyMesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
+	for (vector<Mesh*>::iterator object = objects->begin(); object != objects->end(); ++object) {
 		(*object)->setup(ourShader);
 	}
 
